@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  ListItem ListItem[]
+
+  @@map("user")
+}
+
+model UserList {
+  listId    String   @map("list_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([listId, userId])
+  @@map("user_list")
+}
+
+model List {
+  id        String   @id @default(cuid())
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  ListItem ListItem[]
+
+  @@map("list")
+}
+
+model ListItem {
+  id        String   @id @default(cuid())
+  listId    String   @map("list_id")
+  userId    String   @map("user_id")
+  title     String
+  body      String   @db.Text
+  deadline  DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  List         List           @relation(fields: [listId], references: [id])
+  User         User           @relation(fields: [userId], references: [id])
+  ListItemFlag ListItemFlag[]
+
+  @@map("list_item")
+}
+
+model ListItemFlag {
+  listItemId String   @map("list_item_id")
+  flagId     String   @map("flag_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  ListItem ListItem @relation(fields: [listItemId], references: [id])
+  Flag     Flag     @relation(fields: [flagId], references: [id])
+
+  @@id([flagId, listItemId])
+  @@map("list_item_flag")
+}
+
+model Flag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  ListItemFlag ListItemFlag[]
+
+  @@map("flag")
+}
