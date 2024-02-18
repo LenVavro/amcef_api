@@ -19,14 +19,22 @@ export class ListsService {
   }
 
   async list(where: Prisma.ListWhereUniqueInput) {
-    return this.prisma.list.findUnique({ where });
+    return this.prisma.list.findUnique({
+      where,
+      include: {
+        ListItem: { include: { ListItemFlag: true } },
+        UserList: {
+          select: { userId: true, createdAt: true, updatedAt: true },
+        },
+      },
+    });
   }
 
-  async createList(createListDto: CreateListDto) {
+  async create(createListDto: CreateListDto) {
     return this.prisma.list.create({ data: createListDto });
   }
 
-  async shareList(listId: List['id'], shareListDto: ShareListDto) {
+  async share(listId: List['id'], shareListDto: ShareListDto) {
     return this.prisma.userList.create({
       data: { listId, userId: shareListDto.userId },
     });

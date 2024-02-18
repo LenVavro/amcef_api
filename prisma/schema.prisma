@@ -18,6 +18,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   ListItem ListItem[]
+  UserList UserList[]
 
   @@map("user")
 }
@@ -27,6 +28,9 @@ model UserList {
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  User User @relation(fields: [userId], references: [id])
+  List List @relation(fields: [listId], references: [id])
 
   @@id([listId, userId])
   @@map("user_list")
@@ -39,6 +43,7 @@ model List {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   ListItem ListItem[]
+  UserList UserList[]
 
   @@map("list")
 }

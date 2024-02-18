@@ -19,11 +19,11 @@ export class ListsController {
 
   @Post()
   create(@Body() createListDto: CreateListDto) {
-    return this.listsService.createList(createListDto);
+    return this.listsService.create(createListDto);
   }
 
   @Post('/:id/share')
   share(@Param('id') id: string, @Body() shareListDto: ShareListDto) {
-    return this.listsService.shareList(id, shareListDto);
+    return this.listsService.share(id, shareListDto);
   }
 }
