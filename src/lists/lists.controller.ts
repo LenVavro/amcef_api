@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ListAccessGuard } from 'src/lists/list-access.guard';
 import { CreateListDto } from './dto/create-list.dto';
 import { ShareListDto } from './dto/share-list.dto';
 import { ListsService } from './lists.service';
@@ -12,18 +14,21 @@ export class ListsController {
     return this.listsService.lists();
   }
 
-  @Get('/:id')
-  list(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard, ListAccessGuard)
+  @Get('/:listId')
+  list(@Param('listId') id: string) {
     return this.listsService.list({ id });
   }
 
+  @UseGuards(JwtAuthGuard, ListAccessGuard)
   @Post()
   create(@Body() createListDto: CreateListDto) {
     return this.listsService.create(createListDto);
   }
 
-  @Post('/:id/share')
-  share(@Param('id') id: string, @Body() shareListDto: ShareListDto) {
+  @UseGuards(JwtAuthGuard, ListAccessGuard)
+  @Post('/:listId/share')
+  share(@Param('listId') id: string, @Body() shareListDto: ShareListDto) {
     return this.listsService.share(id, shareListDto);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { List, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { ShareListDto } from './dto/share-list.dto';
 
