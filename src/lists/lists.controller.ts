@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ListAccessGuard } from 'src/lists/list-access.guard';
@@ -16,6 +16,7 @@ import { ShareListDto } from './dto/share-list.dto';
 import { ListsService } from './lists.service';
 
 @Controller('lists')
+@ApiTags('Lists')
 export class ListsController {
   constructor(private readonly listsService: ListsService) {}
 

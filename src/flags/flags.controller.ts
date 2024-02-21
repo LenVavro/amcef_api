@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateFlagDto } from './dto/create-flag.dto';
 import { FlagsService } from './flags.service';
 
 @Controller('flags')
+@ApiTags('Flags')
 export class FlagsController {
   constructor(private readonly flagsService: FlagsService) {}
 

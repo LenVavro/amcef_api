@@ -7,7 +7,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { List, ListItem, User } from '@prisma/client';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -17,6 +22,7 @@ import { FlagItemDto } from './dto/flag-item.dto';
 import { ItemsService } from './items.service';
 
 @Controller('/lists/:listId/items')
+@ApiTags('Items')
 @ApiParam({ name: 'listId', schema: { type: 'string' }, required: true })
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
