@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { List, Prisma } from '@prisma/client';
+import { List, Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { ShareListDto } from './dto/share-list.dto';
@@ -30,8 +30,10 @@ export class ListsService {
     });
   }
 
-  async create(createListDto: CreateListDto) {
-    return this.prisma.list.create({ data: createListDto });
+  async create(createListDto: CreateListDto, userId: User['id']) {
+    return this.prisma.list.create({
+      data: { ...createListDto, UserList: { create: { userId } } },
+    });
   }
 
   async share(listId: List['id'], shareListDto: ShareListDto) {

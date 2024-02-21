@@ -1,5 +1,15 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { List } from '@prisma/client';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { List, User } from '@prisma/client';
+import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ListAccessGuard } from 'src/lists/list-access.guard';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -16,16 +26,18 @@ export class ItemsController {
   }
 
   @UseGuards(JwtAuthGuard, ListAccessGuard)
+  @ApiBearerAuth()
   @Post()
   create(
     @Param('listId') listId: List['id'],
     @Body() createItemDto: CreateItemDto,
+    @Req() req: Request & { user: User },
   ) {
-    // TODO: userId
-    return this.itemsService.create(listId, 'test_user', createItemDto);
+    return this.itemsService.create(listId, req.user.id, createItemDto);
   }
 
   @UseGuards(JwtAuthGuard, ListAccessGuard)
+  @ApiBearerAuth()
   @Post('/:itemId/flags')
   flag(@Param('itemId') itemId: List['id'], @Body() flagItemDto: FlagItemDto) {
     return this.itemsService.flag(itemId, flagItemDto);
