@@ -22,13 +22,13 @@ export class ListsController {
   @Get()
   @ApiOperation({ description: 'Get all created todo lists' })
   findAll() {
-    return this.listsService.lists();
+    return this.listsService.findAll();
   }
 
   @Get('/:listId')
   @ApiOperation({ description: 'Get todo lists by ID' })
   list(@Param('listId') id: string) {
-    return this.listsService.list({ id });
+    return this.listsService.findOne({ id });
   }
 
   @Post()

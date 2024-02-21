@@ -37,3 +37,7 @@ b) Prod mode
 
 1. `$ yarn build` or `$ npm run build` builds app
 2. `$ yarn start:prod` or `$ npm run start:prod` starts api
+
+### 5. Api is ready
+
+Api is running on port 3000 ([API docs](http://localhost:3000/api))

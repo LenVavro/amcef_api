@@ -8,7 +8,7 @@ import { ShareListDto } from './dto/share-list.dto';
 export class ListsService {
   constructor(private prisma: PrismaService) {}
 
-  async lists(params?: {
+  async findAll(params?: {
     skip?: number;
     take?: number;
     cursor?: Prisma.ListWhereUniqueInput;
@@ -18,7 +18,7 @@ export class ListsService {
     return this.prisma.list.findMany(params);
   }
 
-  async list(where: Prisma.ListWhereUniqueInput) {
+  async findOne(where: Prisma.ListWhereUniqueInput) {
     return this.prisma.list.findUnique({
       where,
       include: {
