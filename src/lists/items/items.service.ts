@@ -11,7 +11,15 @@ export class ItemsService {
   async items(listId: List['id']) {
     return this.prisma.listItem.findMany({
       where: { listId },
-      include: { ListItemFlag: true },
+      include: {
+        ListItemFlag: {
+          select: {
+            createdAt: true,
+            updatedAt: true,
+            Flag: { select: { id: true, name: true } },
+          },
+        },
+      },
     });
   }
 
