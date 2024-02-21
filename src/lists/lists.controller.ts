@@ -26,8 +26,6 @@ export class ListsController {
   }
 
   @Get('/:listId')
-  @UseGuards(JwtAuthGuard, ListAccessGuard)
-  @ApiBearerAuth()
   @ApiOperation({ description: 'Get todo lists by ID' })
   list(@Param('listId') id: string) {
     return this.listsService.list({ id });
