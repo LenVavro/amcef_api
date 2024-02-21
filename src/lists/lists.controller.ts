@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ListAccessGuard } from 'src/lists/list-access.guard';
@@ -20,20 +20,23 @@ export class ListsController {
   constructor(private readonly listsService: ListsService) {}
 
   @Get()
+  @ApiOperation({ description: 'Get all created todo lists' })
   findAll() {
     return this.listsService.lists();
   }
 
+  @Get('/:listId')
   @UseGuards(JwtAuthGuard, ListAccessGuard)
   @ApiBearerAuth()
-  @Get('/:listId')
+  @ApiOperation({ description: 'Get todo lists by ID' })
   list(@Param('listId') id: string) {
     return this.listsService.list({ id });
   }
 
+  @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Post()
+  @ApiOperation({ description: 'Create todo lists' })
   create(
     @Body() createListDto: CreateListDto,
     @Req() req: Request & { user: User },
@@ -41,9 +44,10 @@ export class ListsController {
     return this.listsService.create(createListDto, req.user.id);
   }
 
+  @Post('/:listId/share')
   @UseGuards(JwtAuthGuard, ListAccessGuard)
   @ApiBearerAuth()
-  @Post('/:listId/share')
+  @ApiOperation({ description: 'Add new user to todo list' })
   share(@Param('listId') id: string, @Body() shareListDto: ShareListDto) {
     return this.listsService.share(id, shareListDto);
   }

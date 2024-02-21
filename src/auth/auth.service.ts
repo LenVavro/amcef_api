@@ -1,10 +1,12 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { RegistrationDto } from './dto/registration.dto';
@@ -25,12 +27,13 @@ export class AuthService {
       })) === 0;
 
     if (!isEmailFree) {
-      throw new NotFoundException('Email is already used. Please Login.');
+      throw new BadRequestException('Email is already used. Please Login.');
     }
 
     try {
+      const hashedPassword = await hash(password, 10);
       const { id } = await this.prisma.user.create({
-        data: { email, password },
+        data: { email, password: hashedPassword },
         select: { id: true },
       });
       return this._generateResponse({ id });
@@ -49,7 +52,7 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    if (user.password !== password) {
+    if (!(await compare(password, user.password))) {
       throw new UnauthorizedException('Invalid password');
     }
 
